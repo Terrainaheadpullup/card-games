@@ -1,4 +1,4 @@
 # card-games
-# Poker - 25%
-# Blackjack - 0%
-# Snap - 0%
+Poker - 25%
+Blackjack - 0%
+Snap - 0%
