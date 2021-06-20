@@ -127,14 +127,61 @@ def blackjack():
     your_total = int(card_1) + int(card_3)
     my_total = int(card_2) + int(card_4)
 
-    # Works out whether you win, lose or draw
-    if my_total > your_total:
+    print(card_1, card_3)
+
+    # AI Twist
+    if my_total < 12:
+        card_6 = random.choice(cards)
+        cards.remove(card_6)
+        my_total += int(card_6)
+
+    if 15 > my_total > 11:
+        chance = random.random()
+        if chance < 0.5:
+            card_8 = random.choice(cards)
+            cards.remove(card_8)
+            my_total += int(card_8)
+
+    if 19 > my_total > 16:
+        chance_2 = random.random()
+        if chance_2 < 0.15:
+            card_10 = random.choice(cards)
+            cards.remove(card_10)
+            my_total += card_10
+
+    # Allows you to twist up to 3 times
+    for j in range(2, 5):
+        stick_twist = input("stick or twist?: ")
+
+        # Code if you twist
+        if stick_twist == "twist":
+            card_5 = random.choice(cards)
+            cards.remove(card_5)
+            your_total += int(card_5)
+            if j == 2:
+                card_7 = card_5
+                print(card_1, card_3, card_7)
+            elif j == 3:
+                card_9 = card_5
+                print(card_1, card_3, card_7, card_9)
+            elif j == 4:
+                card_11 = card_5
+                print(card_1, card_3, card_7, card_9, card_11)
+
+        # Breaks the for loop if you stick
+        if stick_twist == "stick" or j == 4:
+            break
+
+    # Stuff that figures out who won
+    if 21 > your_total < my_total < 21 or my_total < 21 < your_total:
         print("You lose! You got 0 points")
         print("You got.", your_total, "I got", my_total)
-    elif my_total < your_total:
+
+    elif 21 > my_total < your_total < 21 or my_total > 21 > your_total:
         print("You win! You got", bet * 2, "points")
         print("You got.", your_total, "I got", my_total)
-    else:
+
+    elif my_total == your_total or my_total > 21 and your_total > 21:
         print("It was a draw! You got", bet, "points")
         print("You got.", your_total, "I got", my_total)
 
