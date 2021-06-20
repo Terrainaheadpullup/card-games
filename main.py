@@ -1,32 +1,32 @@
 import random
 
-for i in range(1000):
 
+def poker():
     # User inputs the amount they want to bet which is stored as int in the variable 'bet'
     money = input("Enter the amount you want to bet: ")
     bet = int(money)
 
     # Generates all the cards in the deck
-    Faces = ["AH", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "1H", "JH", "QH", "KH",
+    cards = ["AH", "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "1H", "JH", "QH", "KH",
              "AD", "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "1D", "JD", "QD", "KD",
              "AC", "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "1C", "JC", "QC", "KC",
              "AS", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "1S", "JS", "QS", "KS"]
 
     # Chooses cards and removes cards chosen from the deck
-    card_1 = random.choice(Faces)
-    Faces.remove(card_1)
+    card_1 = random.choice(cards)
+    cards.remove(card_1)
 
-    card_2 = random.choice(Faces)
-    Faces.remove(card_2)
+    card_2 = random.choice(cards)
+    cards.remove(card_2)
 
-    card_3 = random.choice(Faces)
-    Faces.remove(card_3)
+    card_3 = random.choice(cards)
+    cards.remove(card_3)
 
-    card_4 = random.choice(Faces)
-    Faces.remove(card_4)
+    card_4 = random.choice(cards)
+    cards.remove(card_4)
 
-    card_5 = random.choice(Faces)
-    Faces.remove(card_5)
+    card_5 = random.choice(cards)
+    cards.remove(card_5)
 
     # Splits the chosen cards into face and suit
     face_1 = card_1[0]
@@ -98,3 +98,57 @@ for i in range(1000):
     print(" ")
     print("-----------------")
     print(" ")
+
+
+def blackjack():
+    # User inputs the amount they want to bet which is stored as int in the variable 'bet'
+    money = input("Enter the amount you want to bet: ")
+    bet = int(money)
+
+    # Generates all the cards in the deck
+    cards = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "10", "10", "10",
+             "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "10", "10", "10",
+             "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "10", "10", "10",
+             "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "10", "10", "10"]
+
+    # Chooses cards and removes cards chosen from the deck
+    card_1 = random.choice(cards)
+    cards.remove(card_1)
+
+    card_2 = random.choice(cards)
+    cards.remove(card_2)
+
+    card_3 = random.choice(cards)
+    cards.remove(card_3)
+
+    card_4 = random.choice(cards)
+    cards.remove(card_4)
+
+    your_total = int(card_1) + int(card_3)
+    my_total = int(card_2) + int(card_4)
+
+    # Works out whether you win, lose or draw
+    if my_total > your_total:
+        print("You lose! You got 0 points")
+        print("You got.", your_total, "I got", my_total)
+    elif my_total < your_total:
+        print("You win! You got", bet * 2, "points")
+        print("You got.", your_total, "I got", my_total)
+    else:
+        print("It was a draw! You got", bet, "points")
+        print("You got.", your_total, "I got", my_total)
+
+    # Separates games to make it more readable
+    print(" ")
+    print("-----------------")
+    print(" ")
+
+
+while 1 == 1:
+    game = input("Enter the name of the game. Enter cancel if you want to quit: ")
+    if game == "poker":
+        poker()
+    elif game == "blackjack":
+        blackjack()
+    elif game == "cancel":
+        break
