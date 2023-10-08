@@ -3,17 +3,17 @@ import matplotlib.pyplot as plt
 import sympy
 
 #Constants
-gamma = 1.4
-R = 287
-T_s = 3500
-P_s = 10000000
+gamma = #Enter specific heat ratio
+R = #Enter Specific gas constant
+T_s = #Enter Stagnation temperature
+P_s = #Enter Stagnation pressure
 p_s = P_s/(T_s * R)
 k_b = 1.38066 * 10**-23
 s = 3.617 * 10 **-10
 m_a = 5.6 * 10 **-26
 E = 97
 upperbound = 2
-Discretisations = 2048
+Discretisations = #Enter the image resolution
 delta_x = upperbound/Discretisations
 numerator = 1
 denominator = 1
