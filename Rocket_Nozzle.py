@@ -3,34 +3,40 @@ import matplotlib.pyplot as plt
 import sympy
 
 #Constants
-gamma = #Enter specific heat ratio
-R = #Enter Specific gas constant
-T_s = #Enter Stagnation temperature
-P_s = #Enter Stagnation pressure
+gamma = 1.19
+R = 198
+T_s = 4000
+P_s = 10000000
 p_s = P_s/(T_s * R)
 k_b = 1.38066 * 10**-23
 s = 3.617 * 10 **-10
 m_a = 5.6 * 10 **-26
 E = 97
 upperbound = 2
-Discretisations = #Enter the image resolution
+AR = 1
+Discretisations = 500
 delta_x = upperbound/Discretisations
 numerator = 1
 denominator = 1
 
 #2D Arrays of zeros
 V_arr = np.zeros((Discretisations, 1))
-Radii = np.zeros((Discretisations, Discretisations + 1))
-wall_distances = np.zeros((Discretisations, Discretisations+1))
-n_arr = np.zeros((Discretisations, Discretisations+1))
+Radii = np.zeros((Discretisations, AR*Discretisations + 1))
+wall_distances = np.zeros((Discretisations, AR*Discretisations+1))
+n_arr = np.zeros((Discretisations, AR*Discretisations+1))
 
 #Calculating key values of polynomial
 x = sympy.symbols("x", real=True)
-g = 0.5*(x - 2)**4 + (x - 2)**3 + 1
+g = -((7 * sympy.log(x + 1))/(x + 1)**3) + 1
 dgdx = sympy.diff(g, x)
 x_min = sympy.solve(dgdx, x)
+x_min[0] = x_min[0].evalf()
 y_min = g.subs([(x,x_min[0])])
 a_min = y_min**2
+print(x_min)
+print(y_min)
+print(a_min)
+
 
 #Calculating the derivative of the area-mach relationship
 a, k, A = sympy.symbols("a k A", real=True)
@@ -56,8 +62,8 @@ def Calculations(Mach):
 
     #Calculate Discretation Points and Vertical Limits
     sample_point = upperbound * j/Discretisations
-    upper_limit = round(2/3 * g.subs([(x, sample_point)]) * (Discretisations / 2) + (Discretisations / 2))
-    lower_limit = round(-2/3 * g.subs([(x, sample_point)]) * (Discretisations / 2) + (Discretisations / 2))
+    upper_limit = round(g.subs([(x, sample_point)]) * (Discretisations / 2) + (Discretisations / 2))
+    lower_limit = round(-g.subs([(x, sample_point)]) * (Discretisations / 2) + (Discretisations / 2))
 
     #1D arrays of zeros
     Velocity_column = np.zeros((Discretisations, 1), dtype=float)
@@ -71,8 +77,9 @@ def Calculations(Mach):
     Velocity_column[lower_limit:upper_limit] = Velocity
     V_arr = np.hstack((V_arr, Velocity_column))
 
-for j in range (Discretisations):
+for j in range (AR*Discretisations):
     Area_ratio = (g.subs([(x, upperbound/Discretisations * j)]))**2/a_min
+    Area_ratio = Area_ratio.evalf()
     mach_supersonic = 2
     mach_subsonic = 0.001
     numerator = 1
@@ -89,6 +96,7 @@ for j in range (Discretisations):
 for z in range(1):
     V_arr = V_arr.astype(float)
     T_arr = T_s - ((gamma - 1) * V_arr ** 2) / (2 * gamma * R)
+    M_arr = np.sqrt((2/(gamma - 1))*((T_s/T_arr)-1))
     P_arr = P_s * (T_arr / T_s) ** ((gamma) / (gamma - 1))
     Density_arr = P_arr / (R * T_arr)
     Collison_Integral_arr = 1.16145 * (T_arr / E) ** (- 0.14874) + 0.52487 * np.e ** (-0.77320 * (T_arr / E)) + 2.16178 * np.e ** (-2.43787 * (T_arr / E))
@@ -97,16 +105,27 @@ for z in range(1):
 
     #Dealing with log(0) and log(negative number)
     for t in range(Discretisations):
-        for u in range(Discretisations+1):
+        for u in range(AR*Discretisations+1):
             if Re_arr[t][u] <= 0:
                 n_arr[t][u] = 0
             else:
                 n_arr[t][u] = 0.77 * np.log(Re_arr[t][u]) - 3.47
+
+            if T_arr[t][u] == T_s:
+                T_arr[t][u] = 0
+
+            if P_arr[t][u] == P_s:
+                P_arr[t][u] = 0
+
+            if Density_arr[t][u] == p_s:
+                Density_arr[t][u] = 0
 
     V_arr = V_arr * (1 - (wall_distances ** n_arr))
     print(V_arr)
 
 #Plotting arrays
 plt.imshow(V_arr, cmap = "inferno")
-plt.colorbar()
+plt.colorbar(label="Velocity (m/s)")
 plt.show()
+plt.pause(0.1)
+plt.cla()
