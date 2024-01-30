@@ -86,7 +86,7 @@ for j in range (Discretisations):
         print(j)
 
 #Increasing accuracy of arrays
-for z in range(10):
+for z in range(1):
     V_arr = V_arr.astype(float)
     T_arr = T_s - ((gamma - 1) * V_arr ** 2) / (2 * gamma * R)
     P_arr = P_s * (T_arr / T_s) ** ((gamma) / (gamma - 1))
